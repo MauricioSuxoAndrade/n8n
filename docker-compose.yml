@@ -9,16 +9,16 @@ services:
       - N8N_USER_MANAGEMENT_ENABLED=true
       - N8N_RUNNERS_ENABLED=true
       - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
-      - N8N_HOST=n8n.tudominio.com
+      - N8N_HOST=warmisalud.duckdns.org
       - N8N_PORT=5678
       - N8N_PROTOCOL=https
-      - N8N_EDITOR_BASE_URL=https://n8n.tudominio.com
-      - WEBHOOK_URL=https://n8n.tudominio.com
-    networks: [webnet]
+      - N8N_EDITOR_BASE_URL=https://warmisalud.duckdns.org
+      - WEBHOOK_URL=https://warmisalud.duckdns.org
     expose:
-      - "5678"
+      - "5678"                # solo visible para caddy en la misma red
     volumes:
       - n8n_web_data:/home/node/.n8n
+    networks: [webnet]
 
   caddy:
     image: caddy:2-alpine
@@ -31,9 +31,9 @@ services:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy-data:/data
       - caddy-config:/config
-    networks: [webnet]
     depends_on:
       - n8n_web
+    networks: [webnet]
 
 networks:
   webnet:
