@@ -1,0 +1,44 @@
+version: '3.7'
+
+services:
+  n8n_web:
+    image: docker.n8n.io/n8nio/n8n
+    container_name: n8n_web
+    restart: always
+    environment:
+      - N8N_USER_MANAGEMENT_ENABLED=true
+      - N8N_RUNNERS_ENABLED=true
+      - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
+      - N8N_HOST=n8n.tudominio.com
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=https
+      - N8N_EDITOR_BASE_URL=https://n8n.tudominio.com
+      - WEBHOOK_URL=https://n8n.tudominio.com
+    networks: [webnet]
+    expose:
+      - "5678"
+    volumes:
+      - n8n_web_data:/home/node/.n8n
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: n8n_caddy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    networks: [webnet]
+    depends_on:
+      - n8n_web
+
+networks:
+  webnet:
+
+volumes:
+  n8n_web_data:
+  caddy-data:
+  caddy-config:
