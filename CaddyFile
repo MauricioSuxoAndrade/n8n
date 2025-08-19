@@ -1,0 +1,3 @@
+cd ~/n8n_https
+docker compose up -d
+docker logs -f n8n_caddy   # mirar que emita y renueve el cert OK
